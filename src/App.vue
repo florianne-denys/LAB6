@@ -11,8 +11,10 @@
 <template>
   <div class="app">
     <VideoPlayer/>
-    <VideoDetails/>
-    <Comments/>
+    <div class="info">
+      <VideoDetails/>
+      <Comments/>
+    </div>
   </div>
 </template>
 
@@ -20,5 +22,10 @@
   .app{
     display: grid;
     grid-template-columns: 8fr 4fr;
+  }
+  .info{
+    display: flex 20% 80%;
+    flex-direction: column;
+    padding: 1rem;
   }
 </style>

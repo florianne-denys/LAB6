@@ -1,18 +1,28 @@
 <script setup>
     //imports
-    import {reactive, ref} from 'vue';
-    let title = ref("Hello vue!")
+    import {reactive, ref, onMounted} from 'vue';
+    let title = ref("Comments")
+    let commentData = reactive({ comments: [] });
     //data
-    const comments = reactive([
-        {
-            name: "John",
-            comment: "Hello"
-        },
-        {
-            name: "Jane",
-            comment: "Hi"
-        }
-    ])
+    onMounted(() => {
+        const api_url = "https://lab5-p379.onrender.com/api/v1/messages/";
+        fetch(api_url)
+            .then(response => response.json())
+            .then(data => {
+                commentData.comments = data;
+                console.log(commentData.comments);
+            });
+    });
+    // const comments = reactive([
+    //     {
+    //         name: "John",
+    //         comment: "Hello"
+    //     },
+    //     {
+    //         name: "Jane",
+    //         comment: "Hi"
+    //     }
+    // ])
     //functions
     const addComment = () => {
         comments.push({
@@ -27,9 +37,9 @@
     <h1>{{ title }}</h1>
     <div class="comments">
       <ul >
-      <li v-for="comment in comments" :key="comment.name">
-        <h3>{{ comment.name }}</h3>
-        <p>{{ comment.comment }}</p>
+      <li v-for="comment in commentData.comments" :key="commentData.comments.id">
+        <h3>{{ comment.user }}</h3>
+        <p>{{ comment.text }}</p>
       </li>
     </ul>
     </div>

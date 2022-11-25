@@ -43,7 +43,7 @@
 
 <template>
   <div>
-    <h1>{{ title }}</h1>
+    <h1>Comments</h1>
     <div class="comments">
       <ul >
       <li v-for="comment in commentData.comments" :key="commentData.comments.id">

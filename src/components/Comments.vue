@@ -2,7 +2,8 @@
     //imports
     import {reactive, ref, onMounted} from 'vue';
     let commentInput = ref("");
-    let commentData = reactive({ comments: [] });
+    let commentData = reactive({ commentData: [] });
+
     //comments ophalen
     onMounted(() => {
         const api_url = "https://lab5-p379.onrender.com/api/v1/messages/";
@@ -13,32 +14,33 @@
                 console.log(commentData.comments);
             });
     });
+
     //comment toevoegen
     const addComment = () => {
-    let data = {
-        user: "Florianne",
-        text: commentInput.value
-    };
-    fetch("https://lab5-p379.onrender.com/api/v1/messages/", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            commentData.comments.push({
-                commentId: data.id,
-                user: data.user,
-                text: data.text
-            })
+        let data = {
+            user: "Florianne",
+            text: commentInput.value
+        };
+        fetch("https://lab5-p379.onrender.com/api/v1/messages/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-}
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                commentData.comments.push({
+                    commentId: data.data.id,
+                    user: data.data.user,
+                    text: data.data.text
+                })
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
 </script>
 
 <template>
@@ -46,16 +48,16 @@
     <h1>Comments</h1>
     <div class="comments">
       <ul >
-      <li v-for="comment in commentData.comments" :key="commentData.comments.id">
-        <h3>{{ comment.user }}</h3>
-        <p>{{ comment.text }}</p>
-      </li>
-    </ul>
+        <li v-for="comment in commentData.comments" :key="commentData.comments.id">
+          <h3>{{ comment.user }}</h3>
+          <p>{{ comment.text }}</p>
+        </li>
+      </ul>
     </div>
     
     <div class="input">
       <input type="text" v-model="commentInput">
-      <button @click.prevent="addComment">Add Comment</button>
+      <button @click="addComment">Add Comment</button>
     </div>
   </div>
 </template>

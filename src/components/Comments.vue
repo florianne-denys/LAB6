@@ -1,9 +1,9 @@
 <script setup>
     //imports
     import {reactive, ref, onMounted} from 'vue';
-    let title = ref("Comments")
+    let commentInput = ref("");
     let commentData = reactive({ comments: [] });
-    //data
+    //comments ophalen
     onMounted(() => {
         const api_url = "https://lab5-p379.onrender.com/api/v1/messages/";
         fetch(api_url)
@@ -13,23 +13,32 @@
                 console.log(commentData.comments);
             });
     });
-    // const comments = reactive([
-    //     {
-    //         name: "John",
-    //         comment: "Hello"
-    //     },
-    //     {
-    //         name: "Jane",
-    //         comment: "Hi"
-    //     }
-    // ])
-    //functions
+    //comment toevoegen
     const addComment = () => {
-        comments.push({
-            name: "New user",
-            comment: title.value
+    let data = {
+        user: "Florianne",
+        text: commentInput.value
+    };
+    fetch("https://lab5-p379.onrender.com/api/v1/messages/", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            commentData.comments.push({
+                commentId: data.id,
+                user: data.user,
+                text: data.text
+            })
         })
-    }
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
 </script>
 
 <template>
@@ -45,7 +54,7 @@
     </div>
     
     <div class="input">
-      <input type="text" v-model="title">
+      <input type="text" v-model="commentInput">
       <button @click.prevent="addComment">Add Comment</button>
     </div>
   </div>
